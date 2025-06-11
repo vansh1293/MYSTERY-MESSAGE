@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { Loader2, RefreshCcw } from "lucide-react";
 import MessageCard from "@/components/MessageCard";
 
-const page = () => {
+const Page = () => {
     const [message, setMessage] = useState<Message[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [isSwitchedLoading, setIsSwitchedLoading] = useState<boolean>(false);
@@ -132,4 +132,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

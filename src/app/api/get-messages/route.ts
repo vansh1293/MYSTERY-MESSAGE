@@ -5,7 +5,7 @@ import UserModel from "@/model/User";
 import { User } from "next-auth";
 import mongoose from "mongoose";
 
-export async function GET(request: Request) {
+export async function GET() {
     await dbConnect();
     const session = await getServerSession(authOptions);
     const user = session?.user as User;
@@ -30,5 +30,7 @@ export async function GET(request: Request) {
         }
         return Response.json({ success: true, messages: user[0].messages }, { status: 200 });
     } catch (error) {
+        console.error("Error fetching messages:", error);
+        return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
     }
 }

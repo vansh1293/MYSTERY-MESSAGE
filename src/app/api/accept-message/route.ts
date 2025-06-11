@@ -3,7 +3,6 @@ import { authOptions } from "../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConect";
 import UserModel from "@/model/User";
 import { User } from "next-auth";
-import { success } from "zod/v4";
 
 export async function POST(request: Request) {
     await dbConnect();
@@ -30,7 +29,7 @@ export async function POST(request: Request) {
     }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
     await dbConnect();
     const session = await getServerSession(authOptions);
     const user: User = session?.user;

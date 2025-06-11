@@ -12,8 +12,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Loader2 } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-const page = () => {
+const Page = () => {
     const [Sending, setSending] = useState(false);
     const [Generation, setGeneration] = useState<string>('');
     const [loadingGeneration, setLoadingGeneration] = useState(false);
@@ -144,4 +143,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

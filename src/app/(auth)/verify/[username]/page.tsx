@@ -15,7 +15,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 
-const page = () => {
+
+const Page = () => {
     const [submitting, setSubmitting] = useState(false);
     const router = useRouter();
     const param = useParams<{ username: string }>();
@@ -81,4 +82,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -3,7 +3,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConect";
 import UserModel from "@/model/User";
+import { User } from "next-auth";
+import { Types } from "mongoose";
 
+interface Credentials {
+    identifier: string;
+    password: string;
+}
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -13,9 +19,12 @@ export const authOptions: NextAuthOptions = {
                 identifier: { label: "Email or Username", type: "text", placeholder: "Enter your email or username" },
                 password: { label: "Password", type: "password", placeholder: "Enter your password" }
             },
-            async authorize(credentials: any): Promise<any> {
+            async authorize(credentials: Credentials | undefined): Promise<User> {
                 await dbConnect();
                 try {
+                    if (!credentials) {
+                        throw new Error('No credentials provided');
+                    }
                     const user = await UserModel.findOne({
                         $or: [
                             { email: credentials.identifier },
@@ -30,13 +39,23 @@ export const authOptions: NextAuthOptions = {
                     }
                     const isPasswordCorrect = await bcrypt.compare(credentials.password, user.password);
                     if (isPasswordCorrect) {
-                        return user;
+                        return {
+                            id: (user._id as Types.ObjectId).toString(),
+                            _id: (user._id as Types.ObjectId).toString(),
+                            email: user.email,
+                            username: user.username,
+                            isVerified: user.isVerified,
+                            isAccepting: user.isAccepting,
+                        };
                     }
                     else {
                         throw new Error('Incorrect Password');
                     }
-                } catch (error: any) {
-                    throw new Error(error);
+                } catch (error: unknown) {
+                    if (error instanceof Error) {
+                        throw new Error(error.message);
+                    }
+                    throw new Error("An unknown error occurred.");
                 }
             }
         })
@@ -44,9 +63,9 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token._id = user._id?.toString();
+                token._id = user._id;
                 token.isVerified = user.isVerified;
-                token.isAcceptingMessages = user.isAcceptingMessages;
+                token.isAccepting = user.isAccepting;
                 token.username = user.username;
             }
             return token;
@@ -55,7 +74,7 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 session.user._id = token._id;
                 session.user.isVerified = token.isVerified;
-                session.user.isAcceptingMessages = token.isAcceptingMessages;
+                session.user.isAccepting = token.isAccepting;
                 session.user.username = token.username;
             }
             return session;
