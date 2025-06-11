@@ -40,7 +40,6 @@ Create a `.env` file in the root directory and add the following:
 
 ```env
 MONGODB_URI=your_mongodb_connection_string
-RESEND_API_KEY=your_resend_api_key
 NEXTAUTH_SECRET=your_nextauth_secret
 GEMINI_API_KEY=your_gemini_api_key
 NODEMAILER_EMAIL=your_email_address
